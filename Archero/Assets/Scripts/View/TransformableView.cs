@@ -10,6 +10,8 @@ namespace View
         private Camera _camera;
         private Transformable _model;
 
+        public Transformable Model => _model;
+        
         public void Initialize(Transformable model, Camera camera)
         {
             _model = model;

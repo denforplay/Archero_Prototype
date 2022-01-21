@@ -6,10 +6,12 @@ namespace Core.Abstracts
     public abstract class Transformable
     {
         public Vector2 Speed { get; set; }
+        public virtual Vector3 Position { get; set; }
         public Vector3 Rotation { get; set; }
-        public Transformable(Vector2 speed, Vector3 rotation)
+
+        public Transformable(Vector3 position, Vector3 rotation)
         {
-            Speed = speed;
+            Position = position;
             Rotation = rotation;
         }
     }

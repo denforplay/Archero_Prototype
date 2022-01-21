@@ -11,6 +11,8 @@ namespace CompositeRoot
         
         private CollisionController _controller;
         private CollisionRecords _records;
+        public CollisionController Controller => _controller;
+        
         public override void Compose()
         {
             _records = new CollisionRecords();

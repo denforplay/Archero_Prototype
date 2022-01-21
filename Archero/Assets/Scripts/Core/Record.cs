@@ -3,7 +3,7 @@ using Core.Interfaces;
 
 namespace Core
 {
-    public class Record<T1, T2> : IRecord
+    public sealed class Record<T1, T2> : IRecord
     {
         private readonly Action<T1, T2> _action;
 
