@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Core.Abstracts
 {
     public abstract class Transformable
     {
-        public Vector2 Position { get; protected set; }
-        public Vector3 Rotation { get; private set; }
-
-        public Transformable(Vector2 position, Vector3 rotation)
+        public Vector2 Speed { get; set; }
+        public Vector3 Rotation { get; set; }
+        public Transformable(Vector2 speed, Vector3 rotation)
         {
-            Position = position;
+            Speed = speed;
             Rotation = rotation;
         }
     }

@@ -9,6 +9,8 @@ namespace CompositeRoot
 {
     public class HeroCompositeRoot : CompositeRoot
     {
+        [SerializeField] private GameObject _heroSpawnPosition;
+        [SerializeField] private Rigidbody _heroRigidBody;
         [SerializeField] private HeroConfiguration _heroConfig;
         [SerializeField] private TransformableView _transformableView;
         [SerializeField] private Camera _camera;
@@ -21,7 +23,7 @@ namespace CompositeRoot
         
         public override void Compose()
         {
-            _heroModel = new Hero(_transformableView.transform.localPosition, _transformableView.transform.eulerAngles, _heroConfig);
+            _heroModel = new Hero(_heroSpawnPosition.transform.position, _transformableView.transform.rotation.eulerAngles, _heroConfig);
             _heroMovement = new HeroMovement(_heroModel);
             _heroInputRouter = new HeroInputRouter(_heroMovement);
             _transformableView.Initialize(_heroModel, _camera);
