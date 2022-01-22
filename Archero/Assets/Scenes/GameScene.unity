@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 303671090}
   - component: {fileID: 303671091}
   - component: {fileID: 303671087}
+  - component: {fileID: 303671092}
   m_Layer: 6
   m_Name: Hero
   m_TagString: Untagged
@@ -380,6 +381,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 303671090}
+--- !u!114 &303671092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303671085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66833bb5252243b6aa5b27651bde5746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 963194227}
 --- !u!1 &330604690
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,6 +827,7 @@ MonoBehaviour:
   _camera: {fileID: 963194227}
   _enemyFactory: {fileID: 546794386}
   _hero: {fileID: 546794383}
+  _heroRaycast: {fileID: 303671092}
 --- !u!1 &700328814
 GameObject:
   m_ObjectHideFlags: 0

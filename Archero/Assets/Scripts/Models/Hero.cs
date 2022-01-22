@@ -9,7 +9,6 @@ namespace Models
     {
         private HeroConfiguration _heroConfig;
         
-        
         public Hero(Vector3 position, Vector3 rotation, HeroConfiguration heroConfig) : base(position, rotation)
         {
             _heroConfig = heroConfig;
