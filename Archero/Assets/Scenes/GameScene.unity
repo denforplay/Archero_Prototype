@@ -132,7 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 247448974}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShotPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 303671090}
   - component: {fileID: 303671091}
   - component: {fileID: 303671087}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Hero
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -683,6 +683,8 @@ GameObject:
   - component: {fileID: 546794383}
   - component: {fileID: 546794384}
   - component: {fileID: 546794385}
+  - component: {fileID: 546794386}
+  - component: {fileID: 546794387}
   m_Layer: 0
   m_Name: _CompositeRoot
   m_TagString: Untagged
@@ -780,6 +782,37 @@ MonoBehaviour:
   _camera: {fileID: 963194227}
   _collisionRoot: {fileID: 546794384}
   _defaultBulletEntity: {fileID: -5556153012850557635, guid: 670bb0a7afdfe7141a71ad14534df087, type: 3}
+--- !u!114 &546794386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546794380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44acaa341ee47fa9931eae5a478cb6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 963194227}
+  _collisionRoot: {fileID: 546794384}
+  _groundMovingEnemy: {fileID: 8862134945235390463, guid: aa5f7e00ba9df714899cae84e8bef438, type: 3}
+  _flyingEnemy: {fileID: 4196553401504789949, guid: 331777b086fbf5f4d8f4eaf1aaf3e4da, type: 3}
+--- !u!114 &546794387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546794380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 848d7dece9044b358264ed5d81cd12ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 963194227}
+  _enemyFactory: {fileID: 546794386}
+  _hero: {fileID: 546794383}
 --- !u!1 &700328814
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,9 +989,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 303671086}
     m_Modifications:
+    - target: {fileID: 1068557080892904, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1274128683332544, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1300433935902694, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
       propertyPath: m_Name
       value: Makarov Silenced
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300433935902694, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566327983001982, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4776676567501362, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
       propertyPath: m_RootOrder
@@ -986,7 +1035,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4776676567501362, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.16
+      value: 0.41
       objectReference: {fileID: 0}
     - target: {fileID: 4776676567501362, guid: 1a5bd9b626bdcd84793ac762319d5948, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1166,7 +1215,7 @@ Camera:
   far clip plane: 1000
   field of view: 83.4
   orthographic: 0
-  orthographic size: 11.430271
+  orthographic size: 8.73
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

@@ -11,7 +11,7 @@ namespace Models.Systems
         public event Action<Entity<T>> OnEndEvent;
         
         private ICollection<Entity<T>> _entities = new List<Entity<T>>();
-        private ICollection<Entity<T>> Entities => _entities;
+        public ICollection<Entity<T>> Entities => _entities;
 
         public abstract void UpdateSystem(float deltaTime);
 

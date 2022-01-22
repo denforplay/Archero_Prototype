@@ -22,6 +22,6 @@ namespace Models.Weapons.Guns
                 OnShotEvent?.Invoke(bullet);
         }
 
-        private Bullet GetBullet() => new DefaultBullet(_shotPosition.position, Vector3.zero, 5f, 2f);
+        private Bullet GetBullet() => new DefaultBullet(_shotPosition.position, Vector3.zero, 5f, new Vector2(0, 10f));
     }
 }

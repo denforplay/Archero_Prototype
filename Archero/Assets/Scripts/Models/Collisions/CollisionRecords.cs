@@ -9,14 +9,14 @@ namespace Models.Collisions
     {
         public IEnumerable<IRecord> StartCollideValues()
         {
-            yield return IfCollided((Barrier barrier, Hero hero) =>
+            yield return IfCollided((Hero hero1, Hero hero) =>
             {
             });
         }
 
         public IEnumerable<IRecord> EndCollideValues()
         {
-            yield return IfCollided((Barrier barrier, Hero hero) =>
+            yield return IfCollided((Hero hero1, Hero hero) =>
             {
             });
         }
