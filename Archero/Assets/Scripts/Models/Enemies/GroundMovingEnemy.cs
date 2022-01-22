@@ -9,6 +9,8 @@ namespace Models.Enemies
         {
         }
 
+        public Vector2 Speed { get; set; }
+
         public void Move(Vector2 delta)
         {
             Speed = 2f * delta;

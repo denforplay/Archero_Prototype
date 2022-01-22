@@ -10,6 +10,8 @@ namespace Models.Systems
             Entity<EnemyBase> enemyEntity = new Entity<EnemyBase>(enemy, enemy);
             Work(enemyEntity);
         }
+
+       
         
         public override void UpdateSystem(float deltaTime)
         {

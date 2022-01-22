@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 247448973}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.021, y: 0.1036, z: 0.153}
+  m_LocalPosition: {x: -0.018, y: 0.1043, z: -0.125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 821645287}
@@ -268,6 +268,7 @@ GameObject:
   - component: {fileID: 303671091}
   - component: {fileID: 303671087}
   - component: {fileID: 303671092}
+  - component: {fileID: 303671093}
   m_Layer: 6
   m_Name: Hero
   m_TagString: Untagged
@@ -394,6 +395,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 963194227}
+--- !u!114 &303671093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303671085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a9ae1bbe854b4f9b78dc2c8698ff54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &330604690
 GameObject:
   m_ObjectHideFlags: 0
@@ -694,6 +707,7 @@ GameObject:
   m_Component:
   - component: {fileID: 546794381}
   - component: {fileID: 546794382}
+  - component: {fileID: 546794388}
   - component: {fileID: 546794383}
   - component: {fileID: 546794384}
   - component: {fileID: 546794385}
@@ -762,12 +776,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28472490c0e04c8787eeb393f786204f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletFactory: {fileID: 546794385}
   _heroSpawnPosition: {fileID: 1874605100}
   _heroConfig: {fileID: 11400000, guid: a9770d3bd1d4ee14eba53c11748438e8, type: 2}
-  _transformableView: {fileID: 303671091}
+  _weaponConfig: {fileID: 11400000, guid: 9af9b5a618959c0458ceb079914cf83c, type: 2}
+  _bulletFactory: {fileID: 546794385}
+  _heroView: {fileID: 303671091}
   _camera: {fileID: 963194227}
   _shotPosition: {fileID: 247448973}
+  _raycast: {fileID: 303671092}
 --- !u!114 &546794384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,6 +797,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _heroRoot: {fileID: 546794383}
+  _enemiesRoot: {fileID: 546794387}
+  _heroCollisionsEvent: {fileID: 303671093}
 --- !u!114 &546794385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -828,6 +846,21 @@ MonoBehaviour:
   _enemyFactory: {fileID: 546794386}
   _hero: {fileID: 546794383}
   _heroRaycast: {fileID: 303671092}
+--- !u!114 &546794388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546794380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15413fe0b3024c0982e644b74df007f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _compositeRoots:
+  - {fileID: 546794383}
+  - {fileID: 546794384}
 --- !u!1 &700328814
 GameObject:
   m_ObjectHideFlags: 0

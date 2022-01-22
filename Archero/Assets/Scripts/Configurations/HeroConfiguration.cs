@@ -2,7 +2,7 @@
 
 namespace Configurations
 {
-    [CreateAssetMenu(menuName = "Configurations/HeroConfiguration")]
+    [CreateAssetMenu(menuName = "Configurations/Hero configuration")]
     public class HeroConfiguration : ScriptableObject
     {
         [SerializeField][Range(0.01f, 1f)]

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Models;
+﻿using Core;
 using Models.Enemies;
+using Models.MainHero;
 using Models.Systems;
 using UnityEngine;
 using View.Factories;
@@ -17,19 +16,37 @@ namespace CompositeRoot
 
         private EnemySystem _system;
         private EnemiesSpawner _spawner;
+
+        public EnemySystem EnemySystem => _system;
         
         public override void Compose()
         {
             _system = new EnemySystem();
             _spawner = new EnemiesSpawner(_system, _camera);
-            _system.OnStartEvent += entity => _enemyFactory.Create(entity);
-            _system.OnStartEvent += entity => _heroRaycast.RegisterEnemy(entity.GetEntity);
+            _system.OnStartEvent += SpawnEnemy;
+            _system.OnStartEvent += RegisterEnemyToHero;
             _spawner.Spawn();
         }
 
         private void Update()
         {
             _system.UpdateSystem(Time.deltaTime);
+        }
+
+        private void OnDisable()
+        {
+            _system.OnStartEvent -= SpawnEnemy;
+            _system.OnStartEvent -= RegisterEnemyToHero;
+        }
+        
+        private void SpawnEnemy(Entity<EnemyBase> enemy)
+        {
+            _enemyFactory.Create(enemy);
+        }
+
+        private void RegisterEnemyToHero(Entity<EnemyBase> enemy)
+        {
+            _heroRaycast.RegisterEnemy(enemy.GetEntity);
         }
     }
 }

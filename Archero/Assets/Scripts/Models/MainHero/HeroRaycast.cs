@@ -1,30 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Core.Abstracts;
 using Models.Enemies;
 using UnityEngine;
 using View;
 
-namespace Models
+namespace Models.MainHero
 {
     public class HeroRaycast : MonoBehaviour
     {
         public event Action<Vector3> OnChoosedDestinationToShoot;
-        
         [SerializeField] private Camera _camera;
         private List<EnemyBase> _enemies = new List<EnemyBase>();
-
         public void RegisterEnemy(EnemyBase enemy)
         {
             _enemies.Add(enemy);
         }
         
+        public Vector2 ShootDestination { get; set; }
+        
         private void Update()
         {
             if (_enemies.Count == 0)
             {
-                Debug.Log("Empty enemies");
                 return;
             }
             
@@ -58,7 +55,7 @@ namespace Models
                 }
                 
                 Debug.DrawLine(transform.position, closestEnemy.Position);
-                
+                ShootDestination = (closestEnemy.Position - transform.position).normalized;
                 OnChoosedDestinationToShoot?.Invoke(closestEnemy.Position);
             }
         }

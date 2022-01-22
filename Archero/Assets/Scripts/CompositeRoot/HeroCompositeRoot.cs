@@ -1,7 +1,8 @@
-﻿using System;
-using Configurations;
+﻿using Configurations;
+using Core;
+using Core.Interfaces;
 using Inputs;
-using Models;
+using Models.MainHero;
 using Models.Systems;
 using Models.Weapons.Bullets;
 using Models.Weapons.Guns;
@@ -13,12 +14,15 @@ namespace CompositeRoot
 {
     public class HeroCompositeRoot : CompositeRoot
     {
-        [SerializeField] private BulletFactory _bulletFactory;
-        [SerializeField] private GameObject _heroSpawnPosition;
+        [SerializeField] private GameObject _heroSpawnPosition;//must be deleted
+
         [SerializeField] private HeroConfiguration _heroConfig;
-        [SerializeField] private TransformableView _transformableView;
+        [SerializeField] private WeaponConfiguration _weaponConfig;
+        [SerializeField] private BulletFactory _bulletFactory;
+        [SerializeField] private TransformableView _heroView;
         [SerializeField] private Camera _camera;
         [SerializeField] private GameObject _shotPosition;
+        [SerializeField] private HeroRaycast _raycast;
         
         private Hero _heroModel;
         private HeroInputRouter _heroInputRouter;
@@ -26,27 +30,22 @@ namespace CompositeRoot
         private DefaultGun _defaultGun;
         private BulletSystem _bulletSystem;
 
-        public Hero HeroModel => _heroModel;
-        public float Speed => _heroConfig.Speed;
+        public BulletSystem BulletSystem => _bulletSystem;
         
         public override void Compose()
         {
             _defaultGun = new DefaultGun(_shotPosition.gameObject.transform);
-            _heroModel = new Hero(_heroSpawnPosition.transform.position, _transformableView.transform.rotation.eulerAngles, _heroConfig);
-            _heroMovement = new HeroMovement(_heroModel);
-            _defaultGun.OnShotEvent += Shoot;
-            _heroInputRouter = new HeroInputRouter(_heroMovement).BindGun(_defaultGun);
-            _transformableView.Initialize(_heroModel, _camera);
+            _heroModel = new Hero(_heroSpawnPosition.transform.position, _heroView.transform.rotation.eulerAngles, _heroConfig);
+            _heroMovement = new HeroMovement(_heroModel, _raycast);
+            _heroInputRouter = new HeroInputRouter(_heroMovement, _weaponConfig).BindGun(_defaultGun);
+            _heroView.Initialize(_heroModel, _camera);
             _bulletSystem = new BulletSystem();
-            _bulletSystem.OnStartEvent += (entity => _bulletFactory.Create(entity));
             _heroInputRouter.OnEnable();
+            _defaultGun.OnShotEvent += Shoot;
+            _bulletSystem.OnStartEvent += SpawnBullet;
+            _bulletSystem.OnEndEvent += DeleteBullet;
         }
 
-        private void Shoot(Bullet bullet)
-        {
-            Debug.Log("Event");
-            _bulletSystem.Work(bullet, _heroModel.Position, _heroModel.Speed);
-        }
 
         private void Update()
         {
@@ -57,6 +56,24 @@ namespace CompositeRoot
         private void OnDisable()
         {
             _heroInputRouter.OnDisable();
+            _defaultGun.OnShotEvent -= Shoot;
+            _bulletSystem.OnStartEvent -= SpawnBullet;
+            _bulletSystem.OnEndEvent -= DeleteBullet;
+        }
+
+        private void SpawnBullet(Entity<Bullet> bullet)
+        {
+            _bulletFactory.Create(bullet);
+        }
+        
+        private void DeleteBullet(Entity<Bullet> bullet)
+        {
+            _bulletFactory.Destroy(bullet);
+        }
+        
+        private void Shoot(Bullet bullet)
+        {
+            _bulletSystem.Work(bullet, _heroModel.Position, (_heroModel as IMovable).Speed);
         }
     }
 }

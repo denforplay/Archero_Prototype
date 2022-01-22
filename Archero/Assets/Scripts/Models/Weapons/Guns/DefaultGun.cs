@@ -16,12 +16,12 @@ namespace Models.Weapons.Guns
         
         public event Action<Bullet> OnShotEvent;
         
-        public void Shoot()
+        public void Shoot(Vector2 direction)
         {
-                Bullet bullet = GetBullet();
+                Bullet bullet = GetBullet(direction);
                 OnShotEvent?.Invoke(bullet);
         }
 
-        private Bullet GetBullet() => new DefaultBullet(_shotPosition.position, Vector3.zero, 5f, new Vector2(0, 10f));
+        private Bullet GetBullet(Vector2 direction) => new DefaultBullet(_shotPosition.position, Vector3.zero, 5f, direction);
     }
 }

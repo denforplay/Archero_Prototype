@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Core
 {
@@ -10,6 +11,7 @@ namespace Core
         private bool _isGoing;
 
         public float SpentTime => _spentTime;
+        public bool IsCompleted => _spentTime >= _time;
         
         public Timer(float time)
         {
@@ -36,7 +38,9 @@ namespace Core
 
         public void Stop()
         {
+            Debug.Log("Stopped timer");
             _isGoing = false;
+            OnTimerEndEvent?.Invoke();
         }
     }
 }

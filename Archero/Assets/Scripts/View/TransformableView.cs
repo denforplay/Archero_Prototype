@@ -1,10 +1,11 @@
-﻿using System;
-using Core.Abstracts;
+﻿using Core.Abstracts;
+using Core.Interfaces;
+using Core.ObjectPool.Interfaces;
 using UnityEngine;
 
 namespace View
 {
-    public class TransformableView : MonoBehaviour
+    public class TransformableView : MonoBehaviour, IPoolable
     {
         [SerializeField] private Rigidbody _rigidbody;
         private Camera _camera;
@@ -16,13 +17,23 @@ namespace View
         {
             _model = model;
             _camera = camera;
+            _rigidbody.transform.position = model.Position;
         }
 
         private void FixedUpdate()
         {
-            _rigidbody.velocity = _model.Speed;
-            if (_model.Speed != Vector2.zero)
-                transform.up = _model.Speed;
+            if (_model is IMovable movableModel)
+            {
+                _rigidbody.velocity = movableModel.Speed;
+                if (movableModel.Speed != Vector2.zero)
+                    transform.up = movableModel.Speed;
+            }
+            
+        }
+
+        public IObjectPool Origin { get; set; }
+        public void OnReturningInPool()
+        {
         }
     }
 }

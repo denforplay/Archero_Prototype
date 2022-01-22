@@ -5,7 +5,6 @@ namespace Core.Abstracts
 {
     public abstract class Transformable
     {
-        public Vector2 Speed { get; set; }
         public virtual Vector3 Position { get; set; }
         public Vector3 Rotation { get; set; }
 

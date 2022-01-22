@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core;
-using Core.Abstracts;
 using Models.Weapons.Bullets;
 using UnityEngine;
-using View;
 
 namespace Models.Systems
 {
@@ -15,15 +13,16 @@ namespace Models.Systems
         {
             var timer = new Timer(bullet.LifeTime);
             Entity<Bullet> entity = new Entity<Bullet>(bullet, bullet);
+            timer.OnTimerEndEvent += () => StopWorkEntity(entity);
+            timer.Start();
             _timers.Add(timer);
-            _timers.ForEach((timer => timer.Start()));
-            
             Work(entity);
         }
         
         public override void UpdateSystem(float deltaTime)
         {
             _timers.ForEach(timer => timer.Tick(deltaTime));
+            _timers.RemoveAll(timer => timer.IsCompleted);
         }
     }
 }
