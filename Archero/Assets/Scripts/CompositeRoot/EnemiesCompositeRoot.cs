@@ -35,7 +35,7 @@ namespace CompositeRoot
             _enemyGuns = new List<DefaultGun>();
             _system = new EnemySystem();
             _spawner = new EnemiesSpawner(_system, _enemyConfig, _camera);
-            _bulletSystem = new BulletSystem();
+            _bulletSystem = _heroRoot.BulletSystem;
         }
 
         private void Update()
@@ -48,8 +48,6 @@ namespace CompositeRoot
         {
             _system.OnStartEvent += SpawnEnemy;
             _system.OnStartEvent += RegisterEnemyToHero;
-            _bulletSystem.OnStartEvent += SpawnBullet;
-            _bulletSystem.OnEndEvent += DeleteBullet;
             _spawner.Spawn();
         }
 
@@ -57,20 +55,8 @@ namespace CompositeRoot
         {
             _system.OnStartEvent -= SpawnEnemy;
             _system.OnStartEvent -= RegisterEnemyToHero;
-            _bulletSystem.OnStartEvent -= SpawnBullet;
-            _bulletSystem.OnEndEvent -= DeleteBullet;
         }
         
-        private void SpawnBullet(Entity<Bullet> bullet)
-        {
-            _bulletFactory.Create(bullet);
-        }
-        
-        private void DeleteBullet(Entity<Bullet> bullet)
-        {
-            _bulletFactory.Destroy(bullet);
-        }
-
         private void SpawnEnemy(Entity<EnemyBase> enemy)
         {
             var view = _enemyFactory.Create(enemy);

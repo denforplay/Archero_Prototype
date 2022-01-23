@@ -15,8 +15,6 @@ namespace CompositeRoot
 {
     public class HeroCompositeRoot : CompositeRoot
     {
-        [SerializeField] private GameObject _heroSpawnPosition;//must be deleted
-
         [SerializeField] private HealthPointsView _heroHealthView;
         [SerializeField] private HeroConfiguration _heroConfig;
         [SerializeField] private WeaponConfiguration _weaponConfig;
@@ -38,18 +36,25 @@ namespace CompositeRoot
         public override void Compose()
         {
             _defaultGun = new DefaultGun(_shotPosition.gameObject.transform);
-            _heroModel = new Hero(_heroSpawnPosition.transform.position, _heroView.transform.rotation.eulerAngles, _heroConfig);
+            SpawnHero();
             _heroMovement = new HeroMovement(_heroModel, _raycast);
             _heroInputRouter = new HeroInputRouter(_heroMovement, _weaponConfig).BindGun(_defaultGun);
             _heroView.Initialize(_heroModel, _camera);
             _bulletSystem = new BulletSystem();
             _heroHealthView.Initialize(_heroModel);
         }
-
+        
         private void Update()
         {
             _heroInputRouter.Update();
             _bulletSystem.UpdateSystem(Time.deltaTime);
+        }
+
+        private void SpawnHero()
+        {
+            var positionInScreen = new Vector3(Screen.width / 2, Screen.height / 6, 9);
+            var startPosition = _camera.ScreenToWorldPoint(positionInScreen);
+            _heroModel = new Hero(startPosition, _heroView.transform.rotation.eulerAngles, _heroConfig);
         }
 
         private void OnEnable()
