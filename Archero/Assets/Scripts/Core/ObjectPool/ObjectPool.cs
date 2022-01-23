@@ -9,10 +9,9 @@ namespace Core.ObjectPool
     {
         private readonly ConcurrentBag<T> _container = new ConcurrentBag<T>();
 
-        public T GetPrefabInstance(Func<T> instantiateMethod, Action<T> onTakingFromPool)
+        public T GetPrefabInstance(Func<T> instantiateMethod, Action<T> onTakingFromPool = null)
         {
-            T instance = null;
-            if (_container.Count > 0 && _container.TryTake(out instance))
+            if (_container.Count > 0 && _container.TryTake(out var instance))
             {
                 if (instance != null)
                 {

@@ -4,7 +4,7 @@ namespace Core.Interfaces
 {
     public interface IMovable
     {
-        Vector2 Speed { get; set; }
+        Vector2 Direction { get; set; }
         void Move(Vector2 delta);
     }
 }

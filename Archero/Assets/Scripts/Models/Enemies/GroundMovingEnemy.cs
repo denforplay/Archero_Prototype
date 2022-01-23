@@ -1,19 +1,12 @@
-﻿using Core.Interfaces;
+﻿using Configurations;
 using UnityEngine;
 
 namespace Models.Enemies
 {
-    public class GroundMovingEnemy : EnemyBase, IMovable
+    public class GroundMovingEnemy : EnemyBase
     {
-        public GroundMovingEnemy(Vector3 position, Vector3 rotation) : base(position, rotation)
+        public GroundMovingEnemy(Vector3 position, Vector3 rotation, EnemyConfiguration enemyConfig) : base(position, rotation, enemyConfig)
         {
-        }
-
-        public Vector2 Speed { get; set; }
-
-        public void Move(Vector2 delta)
-        {
-            Speed = 2f * delta;
         }
     }
 }

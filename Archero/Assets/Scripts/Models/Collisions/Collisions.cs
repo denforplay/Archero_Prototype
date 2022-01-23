@@ -4,7 +4,7 @@ namespace Models.Collisions
 {
     public class Collisions
     {
-        private List<(object, object)> _collisionPairs = new List<(object, object)>();
+        private readonly List<(object, object)> _collisionPairs = new List<(object, object)>();
 
         public IEnumerable<(object, object)> CollisionPairs => _collisionPairs;
 

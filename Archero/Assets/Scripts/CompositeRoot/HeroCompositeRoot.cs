@@ -3,6 +3,7 @@ using Core;
 using Core.Interfaces;
 using Inputs;
 using Models.MainHero;
+using Models.Raycasts;
 using Models.Systems;
 using Models.Weapons.Bullets;
 using Models.Weapons.Guns;
@@ -16,13 +17,14 @@ namespace CompositeRoot
     {
         [SerializeField] private GameObject _heroSpawnPosition;//must be deleted
 
+        [SerializeField] private HealthPointsView _heroHealthView;
         [SerializeField] private HeroConfiguration _heroConfig;
         [SerializeField] private WeaponConfiguration _weaponConfig;
         [SerializeField] private BulletFactory _bulletFactory;
         [SerializeField] private TransformableView _heroView;
         [SerializeField] private Camera _camera;
         [SerializeField] private GameObject _shotPosition;
-        [SerializeField] private HeroRaycast _raycast;
+        [SerializeField] private HeroRaycastsHit _raycast;
         
         private Hero _heroModel;
         private HeroInputRouter _heroInputRouter;
@@ -31,7 +33,8 @@ namespace CompositeRoot
         private BulletSystem _bulletSystem;
 
         public BulletSystem BulletSystem => _bulletSystem;
-        
+        public Hero Model => _heroModel;
+         
         public override void Compose()
         {
             _defaultGun = new DefaultGun(_shotPosition.gameObject.transform);
@@ -40,17 +43,21 @@ namespace CompositeRoot
             _heroInputRouter = new HeroInputRouter(_heroMovement, _weaponConfig).BindGun(_defaultGun);
             _heroView.Initialize(_heroModel, _camera);
             _bulletSystem = new BulletSystem();
-            _heroInputRouter.OnEnable();
-            _defaultGun.OnShotEvent += Shoot;
-            _bulletSystem.OnStartEvent += SpawnBullet;
-            _bulletSystem.OnEndEvent += DeleteBullet;
+            _heroHealthView.Initialize(_heroModel);
         }
-
 
         private void Update()
         {
             _heroInputRouter.Update();
             _bulletSystem.UpdateSystem(Time.deltaTime);
+        }
+
+        private void OnEnable()
+        {
+            _heroInputRouter.OnEnable();
+            _defaultGun.OnShotEvent += Shoot;
+            _bulletSystem.OnStartEvent += SpawnBullet;
+            _bulletSystem.OnEndEvent += DeleteBullet;
         }
 
         private void OnDisable()
@@ -73,7 +80,7 @@ namespace CompositeRoot
         
         private void Shoot(Bullet bullet)
         {
-            _bulletSystem.Work(bullet, _heroModel.Position, (_heroModel as IMovable).Speed);
+            _bulletSystem.Work(bullet, _heroModel.Position, (_heroModel as IMovable).Direction);
         }
     }
 }

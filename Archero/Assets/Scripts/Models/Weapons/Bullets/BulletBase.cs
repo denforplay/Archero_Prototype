@@ -12,11 +12,11 @@ namespace Models.Weapons.Bullets
         protected Bullet(Vector3 position, Vector3 rotation, float lifeTime, Vector2 speed) : base(position, rotation)
         {
             _lifeTime = lifeTime;
-            Speed = speed;
+            Direction = speed;
         }
 
         public float LifeTime => _lifeTime;
-        public Vector2 Speed { get; set; }
+        public Vector2 Direction { get; set; }
 
         public void Move(Vector2 delta)
         {

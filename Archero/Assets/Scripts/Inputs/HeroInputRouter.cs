@@ -9,16 +9,18 @@ namespace Inputs
 {
     public class HeroInputRouter
     {
+        public event Action<Vector2> OnStartShootingEvent;
+        
         private readonly HeroInput _heroInput;
         private readonly HeroMovement _heroMovement;
-        private readonly WeaponConfiguration _weaponConfiguration;
+        private readonly WeaponConfiguration _weaponConfig;
         private DefaultGun _gun;
         private bool _isAttacking;
 
-        public HeroInputRouter(HeroMovement heroMovement, WeaponConfiguration weaponConfiguration)
+        public HeroInputRouter(HeroMovement heroMovement, WeaponConfiguration weaponConfig)
         {
             _heroMovement = heroMovement;
-            _weaponConfiguration = weaponConfiguration;
+            _weaponConfig = weaponConfig;
             _heroInput = new HeroInput();
         }
 
@@ -40,10 +42,11 @@ namespace Inputs
         
         private async void ShootAsync()
         {
+            OnStartShootingEvent?.Invoke(_heroMovement.ShootDestination);
             while (_heroMovement.IsStanding)
             {
-                OnGunShoot(_heroMovement.ShootDestination);
-                await UniTask.Delay(TimeSpan.FromSeconds(_weaponConfiguration.FireRate));
+                OnGunShoot(_heroMovement.ShootDestination * _weaponConfig.ShootSpeed);
+                await UniTask.Delay(TimeSpan.FromSeconds(_weaponConfig.FireRate));
             }
 
             _isAttacking = false;

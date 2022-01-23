@@ -4,6 +4,5 @@
     {
         Moving,
         Standing, 
-        Attacking
     }
 }

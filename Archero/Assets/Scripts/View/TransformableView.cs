@@ -24,11 +24,12 @@ namespace View
         {
             if (_model is IMovable movableModel)
             {
-                _rigidbody.velocity = movableModel.Speed;
-                if (movableModel.Speed != Vector2.zero)
-                    transform.up = movableModel.Speed;
+                _rigidbody.velocity = movableModel.Direction;
+                if (movableModel.Direction != Vector2.zero)
+                    transform.up = Vector2.MoveTowards(transform.up, movableModel.Direction, Time.deltaTime * 5); 
+
+                _model.Position = _rigidbody.position;
             }
-            
         }
 
         public IObjectPool Origin { get; set; }

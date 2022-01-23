@@ -1,4 +1,5 @@
 ﻿using System;
+using Configurations;
 using Models.Systems;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -7,16 +8,16 @@ namespace Models.Enemies
 {
     public class EnemiesSpawner
     {
-        private int _minCount = 2;
-        private int _maxCount = 5;
-        private EnemySystem _system;
-        private Camera _camera;
+        private readonly EnemySystem _system;
+        private readonly Camera _camera;
         private readonly Func<EnemyBase>[] _variants;
+        private readonly EnemyConfiguration _enemyConfig;
 
-        public EnemiesSpawner(EnemySystem system, Camera camera)
+        public EnemiesSpawner(EnemySystem system, EnemyConfiguration enemyConfig, Camera camera)
         {
             _system = system;
             _camera = camera;
+            _enemyConfig = enemyConfig;
             _variants = new Func<EnemyBase>[]
             {
                 CreateGroundMovingEnemy,
@@ -25,11 +26,11 @@ namespace Models.Enemies
 
         public void Spawn()
         {
-            int count = Random.Range(_minCount, _maxCount);
+            int count = Random.Range(_enemyConfig.MinCount, _enemyConfig.MaxCount);
             for (int i = 0; i < count; i++)
             {
-                var choosed = _variants[Random.Range(0, _variants.Length - 1)];
-                _system.Work(choosed.Invoke());
+                var randomEnemy = _variants[Random.Range(0, _variants.Length)];
+                _system.Work(randomEnemy.Invoke());
             }
         }
 
@@ -43,8 +44,7 @@ namespace Models.Enemies
         private GroundMovingEnemy CreateGroundMovingEnemy()
         {
             var position = GetRandomPositionInUpperPart();
-            Debug.Log(position);
-            return new GroundMovingEnemy(position, Quaternion.identity.eulerAngles);
+            return new GroundMovingEnemy(position, Quaternion.identity.eulerAngles, _enemyConfig);
         }
     }
 }

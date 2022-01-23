@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d2db571038f4b26ac8b6c9d56957bb0, type: 3}
   m_Name: HeroConfig
   m_EditorClassIdentifier: 
-  _speed: 1
+  _speed: 3
+  _startHealthPoints: 519

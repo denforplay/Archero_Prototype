@@ -24,7 +24,6 @@ namespace Models.Collisions
         {
             yield return IfCollided((Bullet bullet, EnemyBase enemy) =>
             {
-                
             });
         }
 

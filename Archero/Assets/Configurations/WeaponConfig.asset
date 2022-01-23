@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: WeaponConfig
   m_EditorClassIdentifier: 
   _fireRate: 3
+  _shootSpeed: 3
+  _bulletLifeTime: 1.05
