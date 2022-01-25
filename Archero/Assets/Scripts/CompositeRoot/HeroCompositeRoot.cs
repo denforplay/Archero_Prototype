@@ -49,6 +49,14 @@ namespace CompositeRoot
             _heroInputRouter = new HeroInputRouter(_heroMovement, _weaponConfig).BindGun(_defaultGun);
             _collisionsRoot.OnComposed += () => _collisionEvent.Initialize(_collisionsRoot.Controller, _heroModel);
         }
+
+        public void StartRoot()
+        {
+            _heroInputRouter.OnEnable();
+            _defaultGun.OnShotEvent += Shoot;
+            _bulletSystem.OnStartEvent += SpawnBullet;
+            _bulletSystem.OnEndEvent += DeleteBullet;
+        }
         
         private void Update()
         {
@@ -62,13 +70,13 @@ namespace CompositeRoot
             var startPosition = _camera.ScreenToWorldPoint(positionInScreen);
             _heroModel = new Hero(startPosition, Quaternion.identity.eulerAngles, _heroConfig);
         }
-
-        private void OnEnable()
+        
+        public void RestartHero()
         {
-            _heroInputRouter.OnEnable();
-            _defaultGun.OnShotEvent += Shoot;
-            _bulletSystem.OnStartEvent += SpawnBullet;
-            _bulletSystem.OnEndEvent += DeleteBullet;
+            var positionInScreen = new Vector3(Screen.width / 2, Screen.height / 6, 9);
+            var startPosition = _camera.ScreenToWorldPoint(positionInScreen);
+            _heroView.transform.position = startPosition;
+            _heroModel.SetHealth(_heroConfig.StartHealthPoint);
         }
 
         private void OnDisable()

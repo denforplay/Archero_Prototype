@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Configurations;
 using Core;
 using Core.PopupSystem;
@@ -18,12 +19,13 @@ namespace CompositeRoot
 {
     public class EnemiesCompositeRoot : CompositeRoot
     {
+        public event Action OnRestartEvent;
+        
         [SerializeField] private WeaponConfiguration _weaponConfig;
         [SerializeField] private EnemyConfiguration _enemyConfig;
         [SerializeField] private Camera _camera;
         [SerializeField] private EnemyFactory _enemyFactory;
         [SerializeField] private HeroCompositeRoot _heroRoot;
-        [SerializeField] private CollisionCompositeRoot _collisitionRoot;
         [SerializeField] private HeroRaycastsHit _heroRaycast;
         [SerializeField] private ExitDoor _exitDoor;
         [SerializeField] private PopupSystem _popupSystem;
@@ -31,21 +33,29 @@ namespace CompositeRoot
         private EnemySystem _enemySystem;
         private EnemiesSpawner _spawner;
         private BulletSystem _bulletSystem;
-        private List<DefaultGun> _enemyGuns;
         private List<EnemyController> _enemyControllers = new List<EnemyController>();
         public EnemySystem EnemyEnemySystem => _enemySystem;
 
         public override void Compose()
         {
-            _enemyGuns = new List<DefaultGun>();
             _enemySystem = new EnemySystem();
             _spawner = new EnemiesSpawner(_enemySystem, _enemyConfig, _camera);
             _bulletSystem = _heroRoot.BulletSystem;
             _exitDoor.OnHeroEnteredEvent += OnAllEnemiesDestroyed;
         }
-
-        private void Restart()
+        
+        public void StartRoot()
         {
+            _enemySystem.OnStartEvent += SpawnEnemy;
+            _enemySystem.OnStartEvent += RegisterEnemyToHero;
+            _enemySystem.OnEndEvent +=_enemyFactory.Destroy;
+            _spawner.Spawn();
+        }
+
+        public void Restart()
+        {
+            _enemySystem.StopAllWork();
+            _exitDoor.DeactivateDoor();
             _spawner.Spawn();
         }
 
@@ -55,7 +65,7 @@ namespace CompositeRoot
             popup.OnRestartEvent += () =>
             {
                 _popupSystem.DeletePopUp();
-                Restart();
+                OnRestartEvent?.Invoke();
             };
         }
 
@@ -63,14 +73,6 @@ namespace CompositeRoot
         {
             _enemySystem.UpdateSystem(Time.deltaTime);
             _enemyControllers.ForEach(controller => controller.Update());
-        }
-
-        private void OnEnable()
-        {
-            _enemySystem.OnStartEvent += SpawnEnemy;
-            _enemySystem.OnStartEvent += RegisterEnemyToHero;
-            _enemySystem.OnEndEvent +=_enemyFactory.Destroy;
-            _spawner.Spawn();
         }
 
         private void OnDisable()
@@ -94,13 +96,11 @@ namespace CompositeRoot
             var enemyController = new EnemyController(enemy.GetEntity, gun, _heroRaycast, _weaponConfig);
             _enemyControllers.Add(enemyController);
             gun.OnShotEvent += (bullet) => Shoot(enemy.GetEntity, bullet, component.ClosestPosition);
-            _enemyGuns.Add(gun);
             enemy.GetEntity.OnHealthChanged += health =>
             {
                 if (health < 0)
                 {
                     _enemySystem.StopWork(enemy.GetEntity);
-                    _enemyGuns.Remove(gun);
                     _enemyControllers.Remove(enemyController);
                     enemyController.OnDisable();
                     if (_enemySystem.Entities.Count == 0)

@@ -8,5 +8,6 @@ namespace Core.Interfaces
         int MaxHealthPoint { get; set; }
         int CurrentHealthPoints { get; set; }
         void TakeDamage(int damage);
+        void SetHealth(int health);
     }
 }

@@ -12,6 +12,7 @@ namespace View
         private Transformable _model;
 
         public Transformable Model => _model;
+        public Rigidbody Rigidbody => _rigidbody;
         
         public void Initialize(Transformable model, Camera camera)
         {

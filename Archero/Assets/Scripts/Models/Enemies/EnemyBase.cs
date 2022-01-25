@@ -36,5 +36,11 @@ namespace Models.Enemies
             CurrentHealthPoints -= damage;
             OnHealthChanged?.Invoke(CurrentHealthPoints);
         }
+
+        public void SetHealth(int health)
+        {
+            CurrentHealthPoints = health;
+            OnHealthChanged?.Invoke(CurrentHealthPoints);
+        }
     }
 }

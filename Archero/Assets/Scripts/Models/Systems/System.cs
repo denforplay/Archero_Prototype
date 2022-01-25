@@ -33,12 +33,10 @@ namespace Models.Systems
             StopWorkEntity(entity);
         }
 
-        public void Stop()
+        public void StopAllWork()
         {
-            foreach (var systemEntity in _entities)
-            {
-                StopWorkEntity(systemEntity);
-            }
+            List<Entity<T>> entities = new List<Entity<T>>(_entities);
+            entities.ForEach(x => StopWorkEntity(x));
         }
     }
 }

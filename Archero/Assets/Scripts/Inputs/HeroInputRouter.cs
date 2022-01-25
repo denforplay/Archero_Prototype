@@ -10,7 +10,6 @@ namespace Inputs
     public class HeroInputRouter
     {
         public event Action<Vector2> OnStartShootingEvent;
-        
         private readonly HeroInput _heroInput;
         private readonly HeroMovement _heroMovement;
         private readonly WeaponConfiguration _weaponConfig;
@@ -31,6 +30,7 @@ namespace Inputs
             MoveHero(_heroInput.Hero.Movement.ReadValue<Vector2>());
             if (_heroMovement.IsStanding && !_isAttacking && _isInitialized)
             {
+                
                 _isAttacking = true;
                 ShootAsync();
             }

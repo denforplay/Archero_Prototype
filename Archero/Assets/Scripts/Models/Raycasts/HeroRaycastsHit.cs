@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Abstracts;
+using Core.Interfaces;
 using Models.Enemies;
 using Models.MainHero;
 using UnityEngine;
@@ -11,9 +12,10 @@ namespace Models.Raycasts
 {
     public class HeroRaycastsHit : RaycastHit
     {
-        private Hero _hero;
         public event Action<Vector3> OnShootDestinationChoosed;
 
+        [SerializeField] private TransformableView _transformableView;
+        private Hero _hero;
         public void Initialize(Hero hero)
         {
             _hero = hero;
@@ -38,6 +40,9 @@ namespace Models.Raycasts
                 Debug.DrawLine(_hero.Position, closestEnemy.Model.Position);
                 ShootDestination = (closestEnemy.Model.Position - _hero.Position).normalized;
                 CurrentTarget = closestEnemy.Model as EnemyBase;
+                if ((_transformableView.Model is IMovable movableModel) && movableModel.Direction == Vector2.zero)
+                    _transformableView.Rigidbody.transform.up =
+                        Vector2.MoveTowards(_transformableView.Rigidbody.transform.up, ShootDestination, Time.deltaTime * 5); 
                 OnShootDestinationChoosed?.Invoke(closestEnemy.Model.Position);
             }
         }

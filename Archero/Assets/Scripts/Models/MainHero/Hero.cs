@@ -11,7 +11,6 @@ namespace Models.MainHero
     {
         public event Action<int> OnHealthChanged;
         public event Action<int> OnCoinsChanged;
-        public event Action OnHealthOver;
         
         private readonly HeroConfiguration _heroConfig;
         private readonly float _speed;
@@ -39,6 +38,12 @@ namespace Models.MainHero
         public void TakeDamage(int damage)
         {
             CurrentHealthPoints -= damage;
+            OnHealthChanged?.Invoke(CurrentHealthPoints);
+        }
+
+        public void SetHealth(int health)
+        {
+            CurrentHealthPoints = health;
             OnHealthChanged?.Invoke(CurrentHealthPoints);
         }
 

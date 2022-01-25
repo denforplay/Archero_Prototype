@@ -28,7 +28,7 @@ namespace Inputs
             _heroRaycast = heroRaycast;
             _weaponConfiguration = weaponConfiguration;
             _gun = gun;
-            _movementState = new StandingState(2f);
+            _movementState = new StandingState(5f);
             _movementState.Owner = this;
         }
         

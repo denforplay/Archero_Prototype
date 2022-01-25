@@ -398,6 +398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 963194227}
+  _transformableView: {fileID: 303671091}
 --- !u!114 &303671093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,6 +613,7 @@ GameObject:
   - component: {fileID: 546794385}
   - component: {fileID: 546794386}
   - component: {fileID: 546794387}
+  - component: {fileID: 546794389}
   m_Layer: 0
   m_Name: _CompositeRoot
   m_TagString: Untagged
@@ -748,7 +750,6 @@ MonoBehaviour:
   _camera: {fileID: 963194227}
   _enemyFactory: {fileID: 546794386}
   _heroRoot: {fileID: 546794383}
-  _collisitionRoot: {fileID: 546794384}
   _heroRaycast: {fileID: 303671092}
   _exitDoor: {fileID: 2007232581}
   _popupSystem: {fileID: 1095962491}
@@ -768,6 +769,23 @@ MonoBehaviour:
   - {fileID: 546794383}
   - {fileID: 546794384}
   - {fileID: 546794387}
+  - {fileID: 546794389}
+--- !u!114 &546794389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546794380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be9db61ec1946179b3a4f067d8530bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gamePopup: {fileID: 1439282344}
+  _popupSystem: {fileID: 1095962491}
+  _heroRoot: {fileID: 546794383}
+  _enemyRoot: {fileID: 546794387}
 --- !u!1 &571623520
 GameObject:
   m_ObjectHideFlags: 0
@@ -1870,6 +1888,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1439282343}
+  - component: {fileID: 1439282344}
   m_Layer: 5
   m_Name: GamePopup
   m_TagString: Untagged
@@ -1897,6 +1916,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1439282344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439282342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d23a21103bf54f0688e3c74a84d4fb8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pauseButton: {fileID: 896084290}
 --- !u!1 &1444824245
 GameObject:
   m_ObjectHideFlags: 0
