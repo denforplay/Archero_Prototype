@@ -26,7 +26,7 @@ namespace View.Factories
             view.transform.SetParent(null);
             if (view.gameObject.TryGetComponent(out CollisionEvent collision))
             {
-                collision.Initialize(_collisionRoot.Controller, _camera);
+                collision.Initialize(_collisionRoot.Controller, entity.GetEntity);
             }
             view.Initialize(entity.Transformable, _camera);
             _entitiesViews.Enqueue(view);
@@ -35,8 +35,10 @@ namespace View.Factories
         
         public void Destroy(Entity<T> entity)
         {
+            if (_entitiesViews.Count > 0)
                 _entitiesPool.ReturnToPool(_entitiesViews.Dequeue());
         }
+
 
         protected abstract TransformableView GetEntity(T entity);
     }

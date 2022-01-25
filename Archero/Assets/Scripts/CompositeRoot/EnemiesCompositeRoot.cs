@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Configurations;
 using Core;
+using Core.PopupSystem;
 using Inputs;
+using Models;
 using Models.Enemies;
 using Models.Raycasts;
 using Models.Systems;
@@ -10,6 +12,7 @@ using Models.Weapons.Guns;
 using UnityEngine;
 using View;
 using View.Factories;
+using View.Popups;
 
 namespace CompositeRoot
 {
@@ -20,41 +23,61 @@ namespace CompositeRoot
         [SerializeField] private Camera _camera;
         [SerializeField] private EnemyFactory _enemyFactory;
         [SerializeField] private HeroCompositeRoot _heroRoot;
+        [SerializeField] private CollisionCompositeRoot _collisitionRoot;
         [SerializeField] private HeroRaycastsHit _heroRaycast;
-        [SerializeField] private BulletFactory _bulletFactory;
+        [SerializeField] private ExitDoor _exitDoor;
+        [SerializeField] private PopupSystem _popupSystem;
         
-        private EnemySystem _system;
+        private EnemySystem _enemySystem;
         private EnemiesSpawner _spawner;
         private BulletSystem _bulletSystem;
         private List<DefaultGun> _enemyGuns;
         private List<EnemyController> _enemyControllers = new List<EnemyController>();
-        public EnemySystem EnemySystem => _system;
+        public EnemySystem EnemyEnemySystem => _enemySystem;
 
         public override void Compose()
         {
             _enemyGuns = new List<DefaultGun>();
-            _system = new EnemySystem();
-            _spawner = new EnemiesSpawner(_system, _enemyConfig, _camera);
+            _enemySystem = new EnemySystem();
+            _spawner = new EnemiesSpawner(_enemySystem, _enemyConfig, _camera);
             _bulletSystem = _heroRoot.BulletSystem;
+            _exitDoor.OnHeroEnteredEvent += OnAllEnemiesDestroyed;
+        }
+
+        private void Restart()
+        {
+            _spawner.Spawn();
+        }
+
+        private void OnAllEnemiesDestroyed()
+        {
+            var popup = _popupSystem.SpawnPopup<LevelCompletePopup>();
+            popup.OnRestartEvent += () =>
+            {
+                _popupSystem.DeletePopUp();
+                Restart();
+            };
         }
 
         private void Update()
         {
-            _system.UpdateSystem(Time.deltaTime);
+            _enemySystem.UpdateSystem(Time.deltaTime);
             _enemyControllers.ForEach(controller => controller.Update());
         }
 
         private void OnEnable()
         {
-            _system.OnStartEvent += SpawnEnemy;
-            _system.OnStartEvent += RegisterEnemyToHero;
+            _enemySystem.OnStartEvent += SpawnEnemy;
+            _enemySystem.OnStartEvent += RegisterEnemyToHero;
+            _enemySystem.OnEndEvent +=_enemyFactory.Destroy;
             _spawner.Spawn();
         }
 
         private void OnDisable()
         {
-            _system.OnStartEvent -= SpawnEnemy;
-            _system.OnStartEvent -= RegisterEnemyToHero;
+            _enemySystem.OnStartEvent -= SpawnEnemy;
+            _enemySystem.OnStartEvent -= RegisterEnemyToHero;
+            _enemySystem.OnEndEvent -= _enemyFactory.Destroy;
         }
         
         private void SpawnEnemy(Entity<EnemyBase> enemy)
@@ -66,10 +89,26 @@ namespace CompositeRoot
             {
                 healthView.Initialize(enemy.GetEntity);
             }
-            DefaultGun gun = new DefaultGun(view.transform);
-            _enemyControllers.Add(new EnemyController(enemy.GetEntity, gun, _heroRaycast, _weaponConfig));
+            
+            DefaultGun gun = new DefaultGun(view.Model, _weaponConfig);
+            var enemyController = new EnemyController(enemy.GetEntity, gun, _heroRaycast, _weaponConfig);
+            _enemyControllers.Add(enemyController);
             gun.OnShotEvent += (bullet) => Shoot(enemy.GetEntity, bullet, component.ClosestPosition);
             _enemyGuns.Add(gun);
+            enemy.GetEntity.OnHealthChanged += health =>
+            {
+                if (health < 0)
+                {
+                    _enemySystem.StopWork(enemy.GetEntity);
+                    _enemyGuns.Remove(gun);
+                    _enemyControllers.Remove(enemyController);
+                    enemyController.OnDisable();
+                    if (_enemySystem.Entities.Count == 0)
+                        _exitDoor.ActivateDoor();
+                    
+                    _heroRoot.Model.AddCoins(UnityEngine.Random.Range(5, 25));
+                }
+            };
         }
         
         private void Shoot(EnemyBase enemy, Bullet bullet, Vector2 direction)

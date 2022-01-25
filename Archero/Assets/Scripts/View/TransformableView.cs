@@ -26,7 +26,7 @@ namespace View
             {
                 _rigidbody.velocity = movableModel.Direction;
                 if (movableModel.Direction != Vector2.zero)
-                    transform.up = Vector2.MoveTowards(transform.up, movableModel.Direction, Time.deltaTime * 5); 
+                    _rigidbody.transform.up = Vector2.MoveTowards(_rigidbody.transform.up, movableModel.Direction, Time.deltaTime * 5); 
 
                 _model.Position = _rigidbody.position;
             }

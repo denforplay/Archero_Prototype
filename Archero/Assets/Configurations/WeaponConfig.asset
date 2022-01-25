@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a96a04a7cf04480cadb264c0cbdf39b2, type: 3}
   m_Name: WeaponConfig
   m_EditorClassIdentifier: 
-  _fireRate: 3
-  _shootSpeed: 4.62
-  _bulletLifeTime: 0.5
+  _fireRate: 4
+  _shootSpeed: 4
+  _bulletLifeTime: 20
+  _bulletDamage: 100

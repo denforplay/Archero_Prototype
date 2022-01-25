@@ -2,6 +2,7 @@
 using Core;
 using Core.Interfaces;
 using Inputs;
+using Models.Collisions;
 using Models.MainHero;
 using Models.Raycasts;
 using Models.Systems;
@@ -15,14 +16,16 @@ namespace CompositeRoot
 {
     public class HeroCompositeRoot : CompositeRoot
     {
+        [SerializeField] private CollisionEvent _collisionEvent;
         [SerializeField] private HealthPointsView _heroHealthView;
         [SerializeField] private HeroConfiguration _heroConfig;
         [SerializeField] private WeaponConfiguration _weaponConfig;
         [SerializeField] private BulletFactory _bulletFactory;
         [SerializeField] private TransformableView _heroView;
         [SerializeField] private Camera _camera;
-        [SerializeField] private GameObject _shotPosition;
         [SerializeField] private HeroRaycastsHit _raycast;
+        [SerializeField] private CollisionCompositeRoot _collisionsRoot;
+        [SerializeField] private CoinsView _coinsView;
         
         private Hero _heroModel;
         private HeroInputRouter _heroInputRouter;
@@ -35,13 +38,16 @@ namespace CompositeRoot
          
         public override void Compose()
         {
-            _defaultGun = new DefaultGun(_shotPosition.gameObject.transform);
             SpawnHero();
             _heroMovement = new HeroMovement(_heroModel, _raycast);
-            _heroInputRouter = new HeroInputRouter(_heroMovement, _weaponConfig).BindGun(_defaultGun);
             _heroView.Initialize(_heroModel, _camera);
-            _bulletSystem = new BulletSystem();
+            _raycast.Initialize(_heroModel);
             _heroHealthView.Initialize(_heroModel);
+            _coinsView.Initialize(_heroModel);
+            _bulletSystem = new BulletSystem();
+            _defaultGun = new DefaultGun(_heroModel, _weaponConfig);
+            _heroInputRouter = new HeroInputRouter(_heroMovement, _weaponConfig).BindGun(_defaultGun);
+            _collisionsRoot.OnComposed += () => _collisionEvent.Initialize(_collisionsRoot.Controller, _heroModel);
         }
         
         private void Update()
@@ -54,7 +60,7 @@ namespace CompositeRoot
         {
             var positionInScreen = new Vector3(Screen.width / 2, Screen.height / 6, 9);
             var startPosition = _camera.ScreenToWorldPoint(positionInScreen);
-            _heroModel = new Hero(startPosition, _heroView.transform.rotation.eulerAngles, _heroConfig);
+            _heroModel = new Hero(startPosition, Quaternion.identity.eulerAngles, _heroConfig);
         }
 
         private void OnEnable()

@@ -2,7 +2,6 @@
 using Configurations;
 using Core.Abstracts;
 using Core.Interfaces;
-using Models.Weapons.Guns;
 using UnityEngine;
 
 namespace Models.Enemies
@@ -12,16 +11,24 @@ namespace Models.Enemies
         public event Action<int> OnHealthChanged;
         public int MaxHealthPoint { get; set; }
         public int CurrentHealthPoints { get; set; }
+        
+        public float Speed { get; }
+        public float MovementDistance { get; }
+        public float StandTime { get; }
+
         protected EnemyBase(Vector3 position, Vector3 rotation, EnemyConfiguration enemyConfig) : base(position, rotation)
         {
             MaxHealthPoint = enemyConfig.StartHealthPoints;
             CurrentHealthPoints = MaxHealthPoint;
+            Speed = enemyConfig.Speed;
+            MovementDistance = enemyConfig.MovementDistance;
+            StandTime = enemyConfig.StandingTime;
         }
 
         public Vector2 Direction { get; set; }
-        public void Move(Vector2 delta)
+        public void Move(Vector3 delta)
         {
-            Direction = delta * Direction;
+            Direction = delta * Speed;
         }
 
         public void TakeDamage(int damage)

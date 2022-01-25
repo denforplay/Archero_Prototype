@@ -9,12 +9,18 @@ namespace Models.Collisions
     {
         private Collisions _collisions = new Collisions();
         private readonly Func<IEnumerable<IRecord>> _startCollideRecordsProvider;
-        private readonly Func<IEnumerable<IRecord>> _endCollideRecordsProvider;
 
-        public CollisionController(Func<IEnumerable<IRecord>> startCollideRecordsProvider, Func<IEnumerable<IRecord>> endCollideRecordsProvider)
+        public CollisionController(Func<IEnumerable<IRecord>> startCollideRecordsProvider)
         {
             _startCollideRecordsProvider = startCollideRecordsProvider;
-            _endCollideRecordsProvider = endCollideRecordsProvider;
+        }
+
+        public void Update()
+        {
+            foreach (var pair in _collisions.CollisionPairs)
+                TryCollide(pair);
+
+            _collisions = new Collisions();
         }
 
         public void TryCollide((object, object) pair)
@@ -22,15 +28,7 @@ namespace Models.Collisions
             IEnumerable<IRecord> records = _startCollideRecordsProvider?.Invoke().Where(record => record.IsTarget(pair));
 
             foreach (var record in records)
-                ((dynamic)record).Do((dynamic)pair.Item1, (dynamic)pair.Item2);
-        }
-
-        public void TryEndCollide((object, object) pair)
-        {
-            IEnumerable<IRecord> records = _endCollideRecordsProvider?.Invoke().Where(record => record.IsTarget(pair));
-
-            foreach (var record in records)
-                ((dynamic)record).Do((dynamic)pair.Item1, (dynamic)pair.Item2);
+                ((dynamic) record).Do((dynamic) pair.Item1, (dynamic) pair.Item2);
         }
     }
 }
