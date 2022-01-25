@@ -86,7 +86,7 @@ namespace CompositeRoot
         {
             var view = _enemyFactory.Create(enemy);
             var component = view.gameObject.AddComponent<EnemyRaycastsHit>();
-            component.Init(_camera).RegisterTarget(_heroRoot.Model);
+            component.Init(_camera, view).RegisterTarget(_heroRoot.Model);
             if (view.TryGetComponent<HealthPointsView>(out var healthView))
             {
                 healthView.Initialize(enemy.GetEntity);

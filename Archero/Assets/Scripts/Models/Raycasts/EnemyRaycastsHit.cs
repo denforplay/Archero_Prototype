@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core.Interfaces;
 using Models.MainHero;
 using UnityEngine;
 using View;
@@ -9,7 +10,15 @@ namespace Models.Raycasts
 {
     public class EnemyRaycastsHit : RaycastHit
     {
+        [SerializeField] private TransformableView _transformableView;
         public event Action<Vector3> OnShootDestinationChoosed;
+        
+        public new RaycastHit Init(Camera camera, TransformableView transformableView)
+        {
+            _transformableView = transformableView;
+            base.Init(camera);
+            return this;
+        }
 
         public Vector3 ClosestPosition { get; set; }
         
@@ -28,6 +37,9 @@ namespace Models.Raycasts
                 }
                 Debug.DrawLine(transform.position, closestHero.Model.Position, Color.yellow);
                 ClosestPosition = closestHero.Model.Position;
+                if ((_transformableView.Model is IMovable movableModel) && movableModel.Direction == Vector2.zero)
+                    _transformableView.Rigidbody.transform.up =
+                        Vector2.MoveTowards(_transformableView.Rigidbody.transform.up, (ClosestPosition - transform.position).normalized, Time.deltaTime * 5); 
                 OnShootDestinationChoosed?.Invoke(closestHero.Model.Position);
             }
         }
