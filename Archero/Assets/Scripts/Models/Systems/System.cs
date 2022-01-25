@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Core;
+using System.Linq;
 
 namespace Models.Systems
 {
@@ -9,8 +10,8 @@ namespace Models.Systems
         public event Action<Entity<T>> OnStartEvent;
         public event Action<Entity<T>> OnEndEvent;
         
-        private ICollection<Entity<T>> _entities = new List<Entity<T>>();
-        public ICollection<Entity<T>> Entities => _entities;
+        private List<Entity<T>> _entities = new List<Entity<T>>();
+        public List<Entity<T>> Entities => _entities;
 
         public abstract void UpdateSystem(float deltaTime);
 
@@ -24,6 +25,12 @@ namespace Models.Systems
         {
             _entities.Remove(systemEntity);
             OnEndEvent?.Invoke(systemEntity);
+        }
+
+        public void StopWork(T entityModel)
+        {
+            var entity = _entities.Find(x => x.GetEntity.Equals(entityModel));
+            StopWorkEntity(entity);
         }
 
         public void Stop()

@@ -16,18 +16,20 @@ namespace Inputs
         private readonly WeaponConfiguration _weaponConfig;
         private DefaultGun _gun;
         private bool _isAttacking;
+        private bool _isInitialized;
 
         public HeroInputRouter(HeroMovement heroMovement, WeaponConfiguration weaponConfig)
         {
             _heroMovement = heroMovement;
             _weaponConfig = weaponConfig;
             _heroInput = new HeroInput();
+            _isInitialized = true;
         }
 
         public void Update()
         {
             MoveHero(_heroInput.Hero.Movement.ReadValue<Vector2>());
-            if (_heroMovement.IsStanding && !_isAttacking)
+            if (_heroMovement.IsStanding && !_isAttacking && _isInitialized)
             {
                 _isAttacking = true;
                 ShootAsync();

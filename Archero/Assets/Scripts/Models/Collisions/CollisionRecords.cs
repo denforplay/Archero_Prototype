@@ -6,6 +6,7 @@ using Models.Enemies;
 using Models.MainHero;
 using Models.Systems;
 using Models.Weapons.Bullets;
+using View.Factories;
 
 namespace Models.Collisions
 {
@@ -13,6 +14,7 @@ namespace Models.Collisions
     {
         private readonly EnemySystem _enemySystem;
         private readonly BulletSystem _bulletSystem;
+        private readonly BulletFactory _bulletFactory;
 
         public CollisionRecords(EnemySystem enemySystem, BulletSystem bulletSystem)
         {
@@ -24,13 +26,24 @@ namespace Models.Collisions
         {
             yield return IfCollided((Bullet bullet, EnemyBase enemy) =>
             {
+                if (bullet.Parent is Hero hero)
+                {
+                    enemy.TakeDamage(bullet.Damage);
+                    _bulletSystem.StopWork(bullet);
+                }
             });
-        }
-
-        public IEnumerable<IRecord> EndCollideValues()
-        {
-            yield return IfCollided((Hero hero1, Hero hero) =>
+            
+            yield return IfCollided((Bullet bullet, Hero hero) =>
             {
+                if (bullet.Parent is EnemyBase enemy)
+                {
+                    hero.TakeDamage(bullet.Damage);
+                    _bulletSystem.StopWork(bullet);
+                }
+            });
+            yield return IfCollided((Hero hero, EnemyBase enemy) =>
+            {
+                hero.TakeDamage(50);//constant must be deleted 
             });
         }
 

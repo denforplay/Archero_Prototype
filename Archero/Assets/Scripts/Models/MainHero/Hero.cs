@@ -10,16 +10,17 @@ namespace Models.MainHero
     public class Hero : Transformable, IMovable, IHealthable
     {
         public event Action<int> OnHealthChanged;
-        public int MaxHealthPoint { get; set; }
-        public int CurrentHealthPoints { get; set; }
+        public event Action<int> OnCoinsChanged;
         public event Action OnHealthOver;
         
         private readonly HeroConfiguration _heroConfig;
-        
         private readonly float _speed;
+        private int _coins;
         
         public MovableState State { get; set; }
         public Vector2 Direction { get; set; }
+        public int MaxHealthPoint { get; set; }
+        public int CurrentHealthPoints { get; set; }
         
         public Hero(Vector3 position, Vector3 rotation, HeroConfiguration heroConfig) : base(position, rotation)
         {
@@ -29,16 +30,19 @@ namespace Models.MainHero
             _speed = heroConfig.Speed;
         }
 
+        public void AddCoins(int coins)
+        {
+            _coins += coins;
+            OnCoinsChanged?.Invoke(_coins);
+        }
+
         public void TakeDamage(int damage)
         {
             CurrentHealthPoints -= damage;
-            if (CurrentHealthPoints <= 0)
-            {
-                OnHealthChanged?.Invoke(CurrentHealthPoints);
-            }
+            OnHealthChanged?.Invoke(CurrentHealthPoints);
         }
 
-        public void Move(Vector2 delta)
+        public void Move(Vector3 delta)
         {
             Direction = delta * _speed;
             if (Direction == Vector2.zero)

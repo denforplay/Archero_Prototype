@@ -8,6 +8,8 @@ namespace Models.Enemies
 {
     public class EnemiesSpawner
     {
+        public const float HEIGHT_FOR_FLY = 2;
+        
         private readonly EnemySystem _system;
         private readonly Camera _camera;
         private readonly Func<EnemyBase>[] _variants;
@@ -21,6 +23,7 @@ namespace Models.Enemies
             _variants = new Func<EnemyBase>[]
             {
                 CreateGroundMovingEnemy,
+                CreateFlyEnemy
             };
         }
 
@@ -45,6 +48,13 @@ namespace Models.Enemies
         {
             var position = GetRandomPositionInUpperPart();
             return new GroundMovingEnemy(position, Quaternion.identity.eulerAngles, _enemyConfig);
+        }
+        
+        private FlyEnemy CreateFlyEnemy()
+        {
+            var position = GetRandomPositionInUpperPart();
+            position.z -= HEIGHT_FOR_FLY;
+            return new FlyEnemy(position, Quaternion.identity.eulerAngles, _enemyConfig);
         }
     }
 }

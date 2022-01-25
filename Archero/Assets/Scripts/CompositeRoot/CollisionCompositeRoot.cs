@@ -1,10 +1,14 @@
-﻿using Models.Collisions;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using Models.Collisions;
 using UnityEngine;
 
 namespace CompositeRoot
 {
     public class CollisionCompositeRoot : CompositeRoot
     {
+        public event Action OnComposed;
+        
         [SerializeField] private HeroCompositeRoot _heroRoot;
         [SerializeField] private EnemiesCompositeRoot _enemiesRoot;
         [SerializeField] private CollisionEvent _heroCollisionsEvent;
@@ -14,8 +18,19 @@ namespace CompositeRoot
         
         public override void Compose()
         {
-            _records = new CollisionRecords(_enemiesRoot.EnemySystem, _heroRoot.BulletSystem);
-            _controller = new CollisionController(_records.StartCollideValues, _records.EndCollideValues);
+            _records = new CollisionRecords(_enemiesRoot.EnemyEnemySystem, _heroRoot.BulletSystem);
+            _controller = new CollisionController(_records.StartCollideValues);
+            Update();
+            OnComposed?.Invoke();
+        }
+        
+        private async void Update()
+        {
+            while (true)
+            {
+                await UniTask.WaitForFixedUpdate();
+                _controller.Update();
+            }
         }
     }
 }

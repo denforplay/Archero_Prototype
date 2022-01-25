@@ -7,7 +7,7 @@ namespace View
     public class HealthPointsView : MonoBehaviour
     {
         private const string HEALTH_TEMPLATE = "{0}/{1}";
-        
+        [SerializeField] private GameObject _objectForHp;
         [SerializeField] private TextMesh _healthText;
         private IHealthable _healthObject;
 
@@ -16,6 +16,11 @@ namespace View
             _healthObject = healthObject;
             SetText();
             _healthObject.OnHealthChanged += _ => SetText();
+        }
+
+        private void Update()
+        {
+            _healthText.transform.position = _objectForHp.transform.position;
         }
 
         private void SetText()

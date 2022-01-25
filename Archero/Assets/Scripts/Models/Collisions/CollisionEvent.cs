@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Models.Collisions
 {
@@ -16,6 +17,14 @@ namespace Models.Collisions
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.collider.TryGetComponent(out CollisionEvent collisionEvent))
+            {
+                _collisionController.TryCollide((_model, collisionEvent._model));
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out CollisionEvent collisionEvent))
             {
                 _collisionController.TryCollide((_model, collisionEvent._model));
             }

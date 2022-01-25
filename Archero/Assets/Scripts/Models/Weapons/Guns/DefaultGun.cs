@@ -1,4 +1,5 @@
 ﻿using System;
+using Configurations;
 using Core.Abstracts;
 using Models.Weapons.Bullets;
 using UnityEngine;
@@ -7,11 +8,13 @@ namespace Models.Weapons.Guns
 {
     public class DefaultGun
     {
-        private Transform _shotPosition;
+        private WeaponConfiguration _weaponConfig;
+        private Transformable _parent;
 
-        public DefaultGun(Transform shotPosition)
+        public DefaultGun(Transformable parent, WeaponConfiguration weaponConfig)
         {
-            _shotPosition = shotPosition;
+            _weaponConfig = weaponConfig;
+            _parent = parent;
         }
         
         public event Action<Bullet> OnShotEvent;
@@ -22,6 +25,6 @@ namespace Models.Weapons.Guns
                 OnShotEvent?.Invoke(bullet);
         }
 
-        private Bullet GetBullet(Vector2 direction) => new DefaultBullet(_shotPosition.position, Vector3.zero, 5f, direction);
+        protected virtual Bullet GetBullet(Vector2 direction) => new DefaultBullet(_parent, _parent.Position, Vector3.zero, _weaponConfig.BulletLifeTime, direction, _weaponConfig.BulletDamage);
     }
 }
